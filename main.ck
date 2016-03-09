@@ -1,11 +1,7 @@
 
 // section controllers
-0 => int sectionNum;
-0 => int noteNum;
-
-// simple beat detection (adapted from keiichi takahashi's http://d.hatena.ne.jp/ke_takahashi/20090228)
-time pre;
-1::second => dur d;
+0 => int curSection;
+0 => int curNote;
 
 // modal bar
 ModalBar bar => NRev r => Chorus chorus => dac;
@@ -32,7 +28,53 @@ int drumMap[5];
 
 
 
-// midi input (adapted from chuck example http://chuck.cs.princeton.edu/doc/examples/midi/gomidi2.ck)
+// simple beat detection and "metronome"
+// adapted from keiichi takahashi's http://d.hatena.ne.jp/ke_takahashi/20090228
+time pre;
+0.75::second => dur d;
+
+fun void noteon(float f, dur len, float vel)
+{
+    f => bar.freq;
+    
+    vel => bar.noteOn;
+    len * 0.1 => now;
+    0.0 => bar.noteOn;
+    len * 0.9 => now;
+    
+    // 0.5 => bar.noteOn;
+    <<< len >>>;
+}
+
+fun void playSequence()
+{
+    while (true) {
+        /*
+        (1000,d/4) => noteon;
+        (1000,d/4) => noteon;
+        (1500,d/4) => noteon;
+        (1000,d/4) => noteon;
+        */
+
+        (curFreq(), d/5, 0.75) => noteon;
+        (curFreq(), d/5, 0.75) => noteon;
+        (curFreq(), d/5, 0.75) => noteon;
+        (curFreq(), d/5, 0.75) => noteon;
+        (1000, d/5, 0.0) => noteon;
+    }
+}
+
+fun float curFreq() {
+    notes[curSection][curNote % 4] => int midinote;
+    curNote + 1 => curNote;
+    return Std.mtof(midinote);
+}
+
+spork ~ playSequence();
+
+
+// midi input
+// adapted from chuck example http://chuck.cs.princeton.edu/doc/examples/midi/gomidi2.ck
 
 //--------------------------------------------------------------------------
 
