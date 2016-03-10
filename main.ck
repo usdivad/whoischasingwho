@@ -8,6 +8,8 @@
 // section controllers
 0 => int curSection;
 0 => int curNote;
+0 => int feedbackCount;
+
 
 // modal bar
 ModalBar bar => NRev nrev => Chorus chorus => dac;
@@ -86,12 +88,12 @@ fun void playSequence()
         (1500,d/4) => noteon;
         (1000,d/4) => noteon;
         */
-
-        (curFreq(), d/5, 0.75) => noteon;
-        (curFreq(), d/5, 0.75) => noteon;
-        (curFreq(), d/5, 0.75) => noteon;
-        (curFreq(), d/5, 0.75) => noteon;
-        (1000, d/5, 0.0) => noteon;
+        1.0 => float divisions;
+        (curFreq(), d/divisions, 0.75) => noteon;
+        (curFreq(), d/divisions, 0.75) => noteon;
+        (curFreq(), d/divisions, 0.75) => noteon;
+        (curFreq(), d/divisions, 0.75) => noteon;
+        (1000, d/divisions, 0.0) => noteon;
     }
 }
 
@@ -254,7 +256,13 @@ fun void go( MidiIn min, int id )
             now - pre => dur dd;
             now => pre;
             if (dd > 10::ms && dd < 2::second) {
-               dd => d;
+               if (dd > 65::ms) {
+                   dd => d;
+               }
+               else { // put a cap on it
+                   65::ms => d;
+               }
+               <<< d >>>;
                <<< "BPM:",(1::minute / (d/2)) $ int >>>;
             }
 
