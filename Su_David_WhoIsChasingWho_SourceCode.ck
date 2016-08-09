@@ -234,7 +234,7 @@ for( int i; i < min.cap(); i++ )
     // open the device
     if( min[i].open( i ) )
     {
-        <<< "device", i, "->", min[i].name(), "->", "open: SUCCESS" >>>;
+        // <<< "device", i, "->", min[i].name(), "->", "open: SUCCESS" >>>;
         spork ~ go( min[i], i );
         devices++;
     }
@@ -271,20 +271,24 @@ fun void go( MidiIn min, int id )
             msg.data1 => int channel;
             msg.data2 => int note;
             msg.data3 => int velocity;
-            <<< "device", id, ":", channel, note, velocity >>>;
+            // <<< "device", id, ":", channel, note, velocity >>>;
 
             // beat detection
             now - pre => dur dd;
             now => pre;
             if (dd > 10::ms && dd < 2::second) {
-               if (dd > 65::ms) {
+               if (dd > 33::ms) {
                    dd => d;
                }
                else { // put a cap on it
-                   65::ms => d;
+                   33::ms => d;
                }
-               <<< d >>>;
-               <<< "BPM:",(1::minute / (d/2)) $ int >>>;
+
+               d * 2 => d; // double it so tempos aren't too fast
+               
+               // <<< d >>>;
+               <<< "BPM:",(1::minute / (d/2)) $ int, "\n" >>>;
+
             }
 
             // make some sound
@@ -310,24 +314,37 @@ fun void handleMidiInput(MidiMsg msg) {
 
     <<< curOnsets >>>;
 
+    // prelude section
     if (curSection == 0) {
         if (curOnsets >= preludeOnsets) {
             -1 => curOnsets;
             1 => curSection;
             spork ~ playSequence();
-            <<< "transitioning" >>>;
+            <<< "transitioning to section", curSection >>>;
         }
         else {
             playBar(Std.mtof(notes[0][curOnsets % notes[0].cap()]), inputVelocity);
         }
     }
     else {
-        if (curSection == -1) { // the last section! (for some reason setting to 0 freezes chuck)
+        // the last section!
+        // (for some reason setting to 0 freezes chuck; this causes an array out of bounds exception which is BAD, but the output still continues)
+        if (curSection == -1) {
             playBar(Std.mtof(notes[0][curOnsets % notes[0].cap()]), inputVelocity);
         }
-        if (curOnsets >= mainOnsets) {
-            0 => curOnsets;
-            -1 => curSection;
+
+        // sections 2-4
+        else if (curOnsets >= mainOnsets) {
+            -1 => curOnsets;
+
+            if (curSection < 4) {
+                curSection + 1 => curSection;
+            }
+            else {
+                -1 => curSection;
+            }
+
+            <<< "transitioning to section", curSection >>>;
         }
     }
 
@@ -339,7 +356,7 @@ fun void handleMidiInput(MidiMsg msg) {
 fun void playBar(float freq, float velocity) {
     // Std.mtof(msg.data2) => float freq;
     // msg.data3 / 128.0 => float velocity;
-    <<< "playing bar -> freq: ", freq, ", velocity: ", velocity >>>;
+    // <<< "playing bar -> freq: ", freq, ", velocity: ", velocity >>>;
 
     freq => bar.freq;
     Math.random2f(0.0, 0.25) => bar.strikePosition;
