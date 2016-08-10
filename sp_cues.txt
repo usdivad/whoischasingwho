@@ -1,0 +1,10 @@
+Sensory Percussion Pad Cues
+===========================
+Set: TIES 2016 Performance.sps
+Kit: friend (#5)
+
+Prelude (1): activate center, rim shoulder, rim tip
+Section 2: activate edge
+Section 3: <<<>>>
+Section 4: activate damped
+Coda (5): deactivate edge

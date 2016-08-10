@@ -15,6 +15,7 @@
 0 => int curOnsets;
 16 => int preludeOnsets;
 32 => int mainOnsets;
+// 144 => int triggerNote; // F# 1
 
 
 // modal bar for sound generation
@@ -273,27 +274,26 @@ fun void go( MidiIn min, int id )
             msg.data3 => int velocity;
             // <<< "device", id, ":", channel, note, velocity >>>;
 
-            // beat detection
-            now - pre => dur dd;
-            now => pre;
-            if (dd > 10::ms && dd < 2::second) {
-               if (dd > 33::ms) {
-                   dd => d;
-               }
-               else { // put a cap on it
-                   33::ms => d;
-               }
+            if (velocity > 0) {  // if it's not a note off
+                // beat detection
+                now - pre => dur dd;
+                now => pre;
+                if (dd > 10::ms && dd < 2::second) {
+                   if (dd > 33::ms) {
+                       dd => d;
+                   }
+                   else { // put a cap on it
+                       33::ms => d;
+                   }
 
-               d * 2 => d; // double it so tempos aren't too fast
-               
-               // <<< d >>>;
-               <<< "BPM:",(1::minute / (d/2)) $ int, "\n" >>>;
+                   d * 2 => d; // double it so tempos aren't too fast
+                   
+                   // <<< d >>>;
+                   <<< "BPM:",(1::minute / (d/2)) $ int, "\n" >>>;
 
-            }
+                }
 
-            // make some sound
-            if (velocity > 0) { // if it's not a note off
-                // playBar(msg);
+                // make some NOISE
                 handleMidiInput(msg);
             }
         }
