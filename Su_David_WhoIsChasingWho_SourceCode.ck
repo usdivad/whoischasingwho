@@ -4,7 +4,7 @@
  *
  * Usage: `chuck Su_David_WhoIsChasingWho_SourceCode.ck`
 */
-
+<<< "谁追谁？" >>>;
 
 // SCORE
 // section controllers
@@ -234,7 +234,7 @@ for( int i; i < min.cap(); i++ )
     // open the device
     if( min[i].open( i ) )
     {
-        // <<< "device", i, "->", min[i].name(), "->", "open: SUCCESS" >>>;
+        <<< "device", i, "->", min[i].name(), "->", "open: SUCCESS" >>>;
         spork ~ go( min[i], i );
         devices++;
     }
