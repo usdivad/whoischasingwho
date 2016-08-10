@@ -1,3 +1,8 @@
 resources
 chuck_examples
+
+*.aup
+*.wav*
+
+
 .DS_Store

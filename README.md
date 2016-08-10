@@ -1,0 +1,6 @@
+谁追谁？
+=====
+
+*谁追谁？(Who is chasing who?)* is a composition for solo percussionist and laptop that utilizes digital signal processing methods to provide a novel electroacoustic take on the drum solo. A program, written in ChucK, is initialized and runs for the duration of the piece. Sound is generated both by the program's output, which implies a jhaptal rhythmic cycle, and by the performer, who engages in improvisatory drumming on an acoustic surface, such as a cajon, as well as an electronic surface with MIDI output. As the performer follows musical cues given by the software, the program will simultaneously react to the performer's actions using pitch-tracking, beat detection, and controlled feedback processes in a series of game-like "rounds". In this way man and machine interact seamlessly in a musical dance of leader and follower, posing the question in the piece's title: who is chasing who?
+
+Premiered at the [Toronto International Electroacoustic Symposium 2016](http://cec.sonus.ca/events/TIES/2016/index.html).

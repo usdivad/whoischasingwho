@@ -1,3 +1,4 @@
 #!/bin/bash
 
-chuck Su_David_WhoIsChasingWho_SourceCode.ck
+echo "Running piece..."
+chuck main.ck

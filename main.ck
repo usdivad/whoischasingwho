@@ -2,7 +2,7 @@
  * 谁追谁？(Who is chasing who?)
  * by David Su
  *
- * Usage: `chuck Su_David_WhoIsChasingWho_SourceCode.ck`
+ * Usage: `chuck main.ck`
 */
 <<< "谁追谁？" >>>;
 
