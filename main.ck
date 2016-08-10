@@ -183,13 +183,15 @@ fun void pitch_track() {
         (where $ float) / fft.size() * srate => target_freq;
         // set gain
         (max / .8) => target_gain;
+        (max * .5) => target_gain;
         
         // hop
         (fft.size()/2)::samp => now;
     }
 }
 
-spork ~ pitch_track();
+// commented this out during soundcheck; it's too shifty with the PA
+// spork ~ pitch_track();
 
 
 // interpolation
